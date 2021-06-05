@@ -1,4 +1,4 @@
-name: CraftionsExtentions
+name: CEx
 version: ${project.version}
 main: net.craftions.extensions.Extensions
 api-version: 1.16
@@ -8,5 +8,5 @@ softdepend:
   - CraftionsApi
 commands:
   cex:
-    usage: /cex <install|remove|update|upgrade> [package] [version]
+    usage: /cex <install|remove|update|upgrade|info|help> [package|sub-command] [version]
     permission: craftions.command.cex
