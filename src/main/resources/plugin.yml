@@ -4,3 +4,5 @@ main: net.craftions.extensions.Extensions
 api-version: 1.16
 authors: [ MCTzOCK ]
 website: https://extensions.craftions.net
+softdepend:
+  - CraftionsApi
