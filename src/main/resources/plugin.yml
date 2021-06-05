@@ -6,3 +6,7 @@ authors: [ MCTzOCK ]
 website: https://extensions.craftions.net
 softdepend:
   - CraftionsApi
+commands:
+  cex:
+    usage: /cex <install|remove|update|upgrade> [package] [version]
+    permission: craftions.command.cex
