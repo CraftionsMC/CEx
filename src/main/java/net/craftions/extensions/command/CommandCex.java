@@ -4,38 +4,52 @@
 package net.craftions.extensions.command;
 
 import net.craftions.api.networking.NetUtils;
+import net.craftions.extensions.ExtensionManager;
+import net.craftions.extensions.Extensions;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 public class CommandCex implements CommandExecutor {
 
-    protected String prefix = "[§9CEx§r] ";
-    protected String[] subCommands = {"install", "remove", "update", "upgrade", "info", "help"};
+    public static String prefix = "[§9CEx§r] ";
+    protected String[] subCommands = {"install", "remove", "reinstall"};
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
             sender.sendMessage(getHelpMessage("", true));
         }else {
+            args[1] = args[1].toLowerCase();
             switch (args[0].toLowerCase()){
                 case "install":
                     if(checkForMinimalArgs(2, sender, args)){
                         String packageName = args[1];
-                        String packageVersion = "latest";
-                        if(args.length == 3){
-                            packageVersion = args[2];
-                        }
+                        ExtensionManager.installPackage(packageName, sender);
                     }
                     break;
                 case "remove":
+                    if(checkForMinimalArgs(2, sender, args)) {
+                        String packageName = args[1];
+                        ExtensionManager.removePackage(packageName, sender);
+                    }
                     break;
-                case "update":
-                    break;
-                case "upgrade":
-                    break;
-                case "info":
+                case "reinstall":
+                    if(checkForMinimalArgs(2, sender, args)){
+                        String packageName = args[1];
+                        ExtensionManager.removePackage(packageName, sender);
+                        Extensions.c.put("startup", "pkgToDownload", packageName);
+                        try {
+                            Extensions.c.store();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Bukkit.reload();
+                    }
                     break;
                 case "help":
                     if (args.length == 1){
@@ -69,27 +83,15 @@ public class CommandCex implements CommandExecutor {
         switch (subCommand.toLowerCase()) {
             case "install":
                 r.append("§7⇛ §c/cex install §7installs a package\n");
-                r.append("§7Usage: §c/cex install <name_of_package> [version]\n");
+                r.append("§7Usage: §c/cex install <name_of_package>\n");
                 break;
             case "remove":
                 r.append("§7⇛ §c/cex remove §7removes a package\n");
                 r.append("§7Usage: §c/cex remove <name_of_package>\n");
                 break;
-            case "update":
-                r.append("§7⇛ §c/cex update §7updates the repository cache\n");
-                r.append("§7Usage: §c/cex update\n");
-                break;
-            case "upgrade":
-                r.append("§7⇛ §c/cex upgrade §7updates all installed packages\n");
-                r.append("§7Usage: §c/cex upgrade\n");
-                break;
-            case "info":
-                r.append("§7⇛ §c/cex info §7shows information about one package\n");
-                r.append("§7Usage: §c/cex info <name_of_package>\n");
-                break;
-            case "help":
-                r.append("§7⇛ §c/cex help §7shows help to a sub-command\n");
-                r.append("§7Usage: §c/cex help <sub_command>\n");
+            case "reinstall":
+                r.append("§7⇛ §c/cex reinstall §7reinstalls an installed packages\n");
+                r.append("§7Usage: §c/cex reinstall <name_of_package>\n");
                 break;
             default:
                 for(String s : subCommands){

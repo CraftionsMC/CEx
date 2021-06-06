@@ -8,5 +8,5 @@ softdepend:
   - CraftionsApi
 commands:
   cex:
-    usage: /cex <install|remove|update|upgrade|info|help> [package|sub-command] [version]
+    usage: /cex <install|remove|reinstall> <package>
     permission: craftions.command.cex
